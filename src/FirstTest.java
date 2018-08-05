@@ -212,6 +212,46 @@ public class FirstTest {
         );
     }
 
+    /**
+     * Check only visible results, no scroll down
+     * Only check search result titles for whole word (not as a part of other word Java != JavaScript)
+     */
+    @Test
+    public void testCheckSearchResults()
+    {
+//        String searchText = "Java";  // Fail
+        String searchText = "Periodic table";  // Will Pass, probably :)
+        String searchPattern = String.format("(?i).*?\\b%s\\b.*?", searchText);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                searchText,
+                "Cannot find search input!",
+                5
+        );
+
+        List<WebElement> elements_title = waitElementsPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Search results not found!",
+                15
+        );
+
+        for (WebElement element: elements_title
+             ) {
+            String txt = element.getText();
+            boolean match = txt.matches(searchPattern);
+            Assert.assertTrue(
+                    String.format("Search result '%s' not contain whole word '%s'", txt, searchText),
+                    match);
+        }
+    }
+
     private WebElement waitElementPresent(By by, String errorMessage)
     {
         return waitElementPresent(by, errorMessage, 5);
