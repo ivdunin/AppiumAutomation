@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -173,6 +174,44 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testCancelSearchEx()
+    {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "Cannot find search input!",
+                5
+        );
+
+        List<WebElement> elements = waitElementsPresent(
+                By.id("org.wikipedia:id/page_list_item_container"),
+                "Search results not found!",
+                15
+        );
+
+        Assert.assertTrue("Only one search result found!",
+                elements.toArray().length > 1);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find X button",
+                5
+        );
+
+        waitForElementNotPresent(
+                By.id("org.wikipedia:id/page_list_item_container"),
+                "Search result(s) still visible!",
+                2
+        );
+    }
+
     private WebElement waitElementPresent(By by, String errorMessage)
     {
         return waitElementPresent(by, errorMessage, 5);
@@ -184,6 +223,14 @@ public class FirstTest {
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
+
+    private List<WebElement> waitElementsPresent(By by, String errorMessage, long timeoutInSeconds)
+    {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+    }
+
 
     private WebElement waitForElementAndClick(By by, String errorMessage, long timeoutInSeconds)
     {
@@ -205,7 +252,6 @@ public class FirstTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
-
     }
 
     private WebElement waitForElementAndClear(By by, String errorMessage, long timeoutInSeconds)
