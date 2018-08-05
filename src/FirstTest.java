@@ -59,6 +59,49 @@ public class FirstTest {
     }
 
     @Test
+    public void testCheckHintBeforeSearch1()
+    {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementWithText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search…",
+                "Cannot find search input!",
+                5
+        );
+
+        // Input search text here
+    }
+
+    @Test
+    public void testCheckHintBeforeSearch2()
+    {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find search input",
+                5
+        );
+
+        String searchFieldHint = getElementText(
+                waitElementPresent(
+                        By.id("org.wikipedia:id/search_src_text"),
+                        "Cannot find search input!"
+        ));
+
+        Assert.assertEquals(
+                "Search field hint not found!",
+                "Search…",
+                searchFieldHint);
+
+        // Input search text here
+    }
+
+
+    @Test
     public void testCancelSearch()
     {
         waitForElementAndClick(
@@ -170,6 +213,20 @@ public class FirstTest {
         WebElement element = waitElementPresent(by, errorMessage, timeoutInSeconds);
         element.clear();
         return element;
+    }
 
+    private String getElementText(WebElement element)
+    {
+        return element.getAttribute("text");
+    }
+
+    private WebElement waitForElementWithText(By by, String text, String errorMessage, long timeoutInSeconds)
+    {
+        WebElement element = waitElementPresent(by, errorMessage, timeoutInSeconds);
+        Assert.assertEquals(
+                "Incorrect element text",
+                text,
+                element.getText());
+        return element;
     }
 }
