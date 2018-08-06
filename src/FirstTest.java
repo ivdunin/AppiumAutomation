@@ -181,6 +181,8 @@ public class FirstTest {
     @Test
     public void testSwipeArticle()
     {
+        String searchText = "Appium";
+
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find search input",
@@ -189,27 +191,21 @@ public class FirstTest {
 
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_src_text"),
-                "Java",
+                searchText,
                 "Cannot find search input!",
                 UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Cannot find 'Object-oriented programming language'!",
+                By.xpath(String.format("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='%s']", searchText)),
+                String.format("Cannot find '%s' article!", searchText),
                 SERVER_INTERACTION_TIMEOUT);
 
-
-        WebElement titleElement = waitElementPresent(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "Cannot find article header!",
-                SERVER_INTERACTION_TIMEOUT
+        swipeUpToFindElement(
+                By.xpath("//*[@text='View page in browser']"),
+                "Cannot find the end of the article",
+                20
         );
-
-        swipeUp(2000);
-        swipeUp(2000);
-        swipeUp(2000);
-        swipeUp(2000);
     }
 
     @Test
@@ -364,5 +360,26 @@ public class FirstTest {
         int end_y = (int) (size.height * 0.2);
 
         action.press(x, start_y).waitAction(timeOfSwipe).moveTo(x, end_y).release().perform();
+    }
+
+    protected void swipeUpQuick()
+    {
+        swipeUp(200);
+    }
+
+    protected void swipeUpToFindElement(By by, String error_message, int maxSwipes)
+    {
+        int alreadySwiped = 0;
+
+        while (driver.findElements(by).size() == 0)
+        {
+            if (alreadySwiped > maxSwipes){
+                waitElementPresent(by, "Cannot find element by swiping up.\n" + error_message, 0);
+                return;
+            }
+
+            swipeUpQuick();
+            ++alreadySwiped;
+        }
     }
 }
