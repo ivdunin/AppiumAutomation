@@ -17,6 +17,8 @@ import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
+    private int SERVER_INTERACTION_TIMEOUT = 15;
+    private int UI_INTERACTION_TIMEOUT = 5;
 
     @Before
     public void setUp() throws Exception
@@ -45,20 +47,20 @@ public class FirstTest {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Cannot find 'Search Wikipedia' text",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndSendKeys(
                 By.xpath("//*[contains(@text, 'Search…')]"),
                 "Java",
                 "Cannot find search input!",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitElementPresent(
                 By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
                 "Cannot find 'Object-oriented programming language'!",
-                15);
+                SERVER_INTERACTION_TIMEOUT);
     }
 
     @Test
@@ -67,14 +69,14 @@ public class FirstTest {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find search input",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementWithText(
                 By.id("org.wikipedia:id/search_src_text"),
                 "Search…",
                 "Cannot find search input!",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         // Input search text here
@@ -86,7 +88,7 @@ public class FirstTest {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find search input",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         String searchFieldHint = getElementText(
@@ -110,32 +112,32 @@ public class FirstTest {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find search input",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_src_text"),
                 "Java",
                 "Cannot find search input!",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndClear(
                 By.id("org.wikipedia:id/search_src_text"),
                 "Cannot find search text input",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_close_btn"),
                 "Cannot find X button",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementNotPresent(
                 By.id("org.wikipedia:id/search_close_btn"),
                 "X button still visible!",
-                5
+                UI_INTERACTION_TIMEOUT
         );
     }
 
@@ -145,26 +147,26 @@ public class FirstTest {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find search input",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_src_text"),
                 "Java",
                 "Cannot find search input!",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndClick(
                 By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
                 "Cannot find 'Object-oriented programming language'!",
-                15);
+                SERVER_INTERACTION_TIMEOUT);
 
 
         WebElement titleElement = waitElementPresent(
                 By.id("org.wikipedia:id/view_page_title_text"),
                 "Cannot find article header!",
-                15
+                SERVER_INTERACTION_TIMEOUT
         );
 
         String articleTitle = titleElement.getText();
@@ -182,26 +184,26 @@ public class FirstTest {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find search input",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_src_text"),
                 "Java",
                 "Cannot find search input!",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndClick(
                 By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
                 "Cannot find 'Object-oriented programming language'!",
-                15);
+                SERVER_INTERACTION_TIMEOUT);
 
 
         WebElement titleElement = waitElementPresent(
                 By.id("org.wikipedia:id/view_page_title_text"),
                 "Cannot find article header!",
-                15
+                SERVER_INTERACTION_TIMEOUT
         );
 
         swipeUp(2000);
@@ -216,20 +218,20 @@ public class FirstTest {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find search input",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_src_text"),
                 "Java",
                 "Cannot find search input!",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         List<WebElement> elements = waitElementsPresent(
                 By.id("org.wikipedia:id/page_list_item_container"),
                 "Search results not found!",
-                15
+                SERVER_INTERACTION_TIMEOUT
         );
 
         Assert.assertTrue("Only one search result found!",
@@ -238,7 +240,7 @@ public class FirstTest {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_close_btn"),
                 "Cannot find X button",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementNotPresent(
@@ -262,20 +264,20 @@ public class FirstTest {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find search input",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_src_text"),
                 searchText,
                 "Cannot find search input!",
-                5
+                UI_INTERACTION_TIMEOUT
         );
 
         List<WebElement> elements_title = waitElementsPresent(
                 By.id("org.wikipedia:id/page_list_item_title"),
                 "Search results not found!",
-                15
+                SERVER_INTERACTION_TIMEOUT
         );
 
         for (WebElement element: elements_title
@@ -290,7 +292,7 @@ public class FirstTest {
 
     private WebElement waitElementPresent(By by, String errorMessage)
     {
-        return waitElementPresent(by, errorMessage, 5);
+        return waitElementPresent(by, errorMessage, UI_INTERACTION_TIMEOUT);
     }
 
     private WebElement waitElementPresent(By by, String errorMessage, long timeoutInSeconds)
