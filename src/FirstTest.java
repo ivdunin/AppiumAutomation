@@ -474,6 +474,37 @@ public class FirstTest {
         reopenArticleFromList(articleTitleToReopen);
     }
 
+    @Test
+    public void testAssertTitle()
+    {
+        String searchText = "Java";
+        String articleText = "Java (programming language)";
+
+        String articleLocatorJava = String.format("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='%s']", articleText);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find search input on main page",
+                UI_INTERACTION_TIMEOUT
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                searchText,
+                "Cannot find search input!",
+                UI_INTERACTION_TIMEOUT
+        );
+
+        waitForElementAndClick(
+                By.xpath(articleLocatorJava),
+                "Cannot find article: '" + articleText + "'!",
+                SERVER_INTERACTION_TIMEOUT);
+
+        assertElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Article title not found!");
+    }
+
     /**
      * Reopen article form list and check title. Precondition: call openMyListsFolder
      * @param articleTitle article to open
@@ -800,6 +831,16 @@ public class FirstTest {
         if (amountOfElements > 0) {
             String defaultMessage = String.format("An element '%s' supposed to be not present!", by.toString());
             throw new AssertionError(defaultMessage + " " + error_message);
+        }
+    }
+
+    private void assertElementPresent(By by, String errorMessage)
+    {
+        try {
+            driver.findElement(by);
+        } catch (org.openqa.selenium.NoSuchElementException e)
+        {
+            throw new AssertionError("Element located by '" + by.toString() + "' not found!\n" + errorMessage);
         }
     }
 
