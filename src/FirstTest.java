@@ -20,24 +20,6 @@ public class FirstTest extends CoreTestCase {
     @Test
     public void testSearch()
     {
-//        mainPageObject.waitForElementAndClick(
-//                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-//                "Cannot find 'Search Wikipedia' text",
-//                UI_INTERACTION_TIMEOUT
-//        );
-//
-//        mainPageObject.waitForElementAndSendKeys(
-//                By.xpath("//*[contains(@text, 'Search…')]"),
-//                "Java",
-//                "Cannot find search input!",
-//                UI_INTERACTION_TIMEOUT
-//        );
-//
-//        mainPageObject.waitForElementPresent(
-//                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-//                "Cannot find 'Object-oriented programming language'!",
-//                SERVER_INTERACTION_TIMEOUT
-//        );
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchString("Java");
@@ -90,36 +72,12 @@ public class FirstTest extends CoreTestCase {
     @Test
     public void testCancelSearch()
     {
-        mainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/search_container"),
-                "Cannot find search input",
-                UI_INTERACTION_TIMEOUT
-        );
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
 
-        mainPageObject.waitForElementAndSendKeys(
-                By.id("org.wikipedia:id/search_src_text"),
-                "Java",
-                "Cannot find search input!",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndClear(
-                By.id("org.wikipedia:id/search_src_text"),
-                "Cannot find search text input",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/search_close_btn"),
-                "Cannot find X button",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementNotPresent(
-                By.id("org.wikipedia:id/search_close_btn"),
-                "X button still visible!",
-                UI_INTERACTION_TIMEOUT
-        );
+        searchPageObject.initSearchInput();
+        searchPageObject.waitForCancelButtonToAppear();
+        searchPageObject.clickCancelSearch();
+        searchPageObject.waitForCancelButtonToDisappear();
     }
 
     @Test
