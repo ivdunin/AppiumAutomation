@@ -1,4 +1,5 @@
 import lib.CoreTestCase;
+import lib.ui.ArticlePageObject;
 import lib.ui.MainPageObject;
 import lib.ui.SearchPageObject;
 import org.junit.Assert;
@@ -83,32 +84,14 @@ public class FirstTest extends CoreTestCase {
     @Test
     public void testCompareArticleText()
     {
-        mainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/search_container"),
-                "Cannot find search input",
-                UI_INTERACTION_TIMEOUT
-        );
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchString("Java");
+        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
 
-        mainPageObject.waitForElementAndSendKeys(
-                By.id("org.wikipedia:id/search_src_text"),
-                "Java",
-                "Cannot find search input!",
-                UI_INTERACTION_TIMEOUT
-        );
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
 
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Cannot find 'Object-oriented programming language'!",
-                SERVER_INTERACTION_TIMEOUT);
-
-
-        WebElement titleElement = mainPageObject.waitForElementPresent(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "Cannot find article header!",
-                SERVER_INTERACTION_TIMEOUT
-        );
-
-        String articleTitle = titleElement.getText();
+        String articleTitle = articlePageObject.getArticleTitle();
 
         Assert.assertEquals(
                 "We see unexpected title!",
@@ -122,29 +105,14 @@ public class FirstTest extends CoreTestCase {
     {
         String searchText = "Appium";
 
-        mainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/search_container"),
-                "Cannot find search input",
-                UI_INTERACTION_TIMEOUT
-        );
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchString(searchText);
+        searchPageObject.clickByArticleWithSubstring(searchText);
 
-        mainPageObject.waitForElementAndSendKeys(
-                By.id("org.wikipedia:id/search_src_text"),
-                searchText,
-                "Cannot find search input!",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndClick(
-                By.xpath(String.format("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='%s']", searchText)),
-                String.format("Cannot find '%s' article!", searchText),
-                SERVER_INTERACTION_TIMEOUT);
-
-        mainPageObject.swipeUpToFindElement(
-                By.xpath("//*[@text='View page in browser']"),
-                "Cannot find the end of the article",
-                20
-        );
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.waitForTitleElement();
+        articlePageObject.swipeUpToFooter();
     }
 
     @Test
