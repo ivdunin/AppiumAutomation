@@ -1,5 +1,6 @@
 import lib.CoreTestCase;
 import lib.ui.MainPageObject;
+import lib.ui.SearchPageObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.*;
@@ -19,24 +20,28 @@ public class FirstTest extends CoreTestCase {
     @Test
     public void testSearch()
     {
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find 'Search Wikipedia' text",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search…')]"),
-                "Java",
-                "Cannot find search input!",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitElementPresent(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Cannot find 'Object-oriented programming language'!",
-                SERVER_INTERACTION_TIMEOUT
-        );
+//        mainPageObject.waitForElementAndClick(
+//                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+//                "Cannot find 'Search Wikipedia' text",
+//                UI_INTERACTION_TIMEOUT
+//        );
+//
+//        mainPageObject.waitForElementAndSendKeys(
+//                By.xpath("//*[contains(@text, 'Search…')]"),
+//                "Java",
+//                "Cannot find search input!",
+//                UI_INTERACTION_TIMEOUT
+//        );
+//
+//        mainPageObject.waitForElementPresent(
+//                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+//                "Cannot find 'Object-oriented programming language'!",
+//                SERVER_INTERACTION_TIMEOUT
+//        );
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchString("Java");
+        searchPageObject.waitForSearchResult("Object-oriented programming language");
     }
 
     @Test
@@ -68,7 +73,7 @@ public class FirstTest extends CoreTestCase {
         );
 
         String searchFieldHint = mainPageObject.getElementText(
-                mainPageObject.waitElementPresent(
+                mainPageObject.waitForElementPresent(
                         By.id("org.wikipedia:id/search_src_text"),
                         "Cannot find search input!"
         ));
@@ -139,7 +144,7 @@ public class FirstTest extends CoreTestCase {
                 SERVER_INTERACTION_TIMEOUT);
 
 
-        WebElement titleElement = mainPageObject.waitElementPresent(
+        WebElement titleElement = mainPageObject.waitForElementPresent(
                 By.id("org.wikipedia:id/view_page_title_text"),
                 "Cannot find article header!",
                 SERVER_INTERACTION_TIMEOUT
@@ -200,7 +205,7 @@ public class FirstTest extends CoreTestCase {
                 UI_INTERACTION_TIMEOUT
         );
 
-        List<WebElement> elements = mainPageObject.waitElementsPresent(
+        List<WebElement> elements = mainPageObject.waitForElementsPresent(
                 By.id("org.wikipedia:id/page_list_item_container"),
                 "Search results not found!",
                 SERVER_INTERACTION_TIMEOUT
@@ -246,7 +251,7 @@ public class FirstTest extends CoreTestCase {
                 UI_INTERACTION_TIMEOUT
         );
 
-        List<WebElement> elements_title = mainPageObject.waitElementsPresent(
+        List<WebElement> elements_title = mainPageObject.waitForElementsPresent(
                 By.id("org.wikipedia:id/page_list_item_title"),
                 "Search results not found!",
                 SERVER_INTERACTION_TIMEOUT
@@ -287,7 +292,7 @@ public class FirstTest extends CoreTestCase {
                 "Cannot find article: '" + articleTitle + "'!",
                 SERVER_INTERACTION_TIMEOUT);
 
-        mainPageObject.waitElementPresent(
+        mainPageObject.waitForElementPresent(
                 By.id("org.wikipedia:id/view_page_title_text"),
                 "Cannot find article header!",
                 SERVER_INTERACTION_TIMEOUT
@@ -635,7 +640,7 @@ public class FirstTest extends CoreTestCase {
                 "Cannot find article: '" + articleText + "'!",
                 SERVER_INTERACTION_TIMEOUT);
 
-        mainPageObject.waitElementPresent(
+        mainPageObject.waitForElementPresent(
                 By.id("org.wikipedia:id/view_page_title_text"),
                 "Cannot find article title: " + articleText,
                 SERVER_INTERACTION_TIMEOUT

@@ -13,6 +13,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 
 public class MainPageObject {
+
+    // TODO: combine with values from CoreTestCase
+    protected int SERVER_INTERACTION_TIMEOUT = 15;
+    protected int UI_INTERACTION_TIMEOUT = 5;
+
     protected AppiumDriver driver;
 
     public MainPageObject(AppiumDriver driver)
@@ -20,19 +25,19 @@ public class MainPageObject {
         this.driver = driver;
     }
 
-    public WebElement waitElementPresent(By by, String errorMessage)
+    public WebElement waitForElementPresent(By by, String errorMessage)
     {
-        return waitElementPresent(by, errorMessage, 5 /* UI_INTERACTION_TIMEOUT */);
+        return waitForElementPresent(by, errorMessage, 5 /* UI_INTERACTION_TIMEOUT */);
     }
 
-    public WebElement waitElementPresent(By by, String errorMessage, long timeoutInSeconds)
+    public WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds)
     {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
-    public List<WebElement> waitElementsPresent(By by, String errorMessage, long timeoutInSeconds)
+    public List<WebElement> waitForElementsPresent(By by, String errorMessage, long timeoutInSeconds)
     {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -42,14 +47,14 @@ public class MainPageObject {
 
     public WebElement waitForElementAndClick(By by, String errorMessage, long timeoutInSeconds)
     {
-        WebElement element = waitElementPresent(by, errorMessage, timeoutInSeconds);
+        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.click();
         return element;
     }
 
     public WebElement waitForElementAndSendKeys(By by, String value, String errorMessage, long timeoutInSeconds)
     {
-        WebElement element = waitElementPresent(by, errorMessage, timeoutInSeconds);
+        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.sendKeys(value);
         return element;
     }
@@ -64,7 +69,7 @@ public class MainPageObject {
 
     public WebElement waitForElementAndClear(By by, String errorMessage, long timeoutInSeconds)
     {
-        WebElement element = waitElementPresent(by, errorMessage, timeoutInSeconds);
+        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.clear();
         return element;
     }
@@ -76,7 +81,7 @@ public class MainPageObject {
 
     public WebElement waitForElementWithText(By by, String text, String errorMessage, long timeoutInSeconds)
     {
-        WebElement element = waitElementPresent(by, errorMessage, timeoutInSeconds);
+        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         Assert.assertEquals(
                 "Incorrect element text",
                 text,
@@ -113,7 +118,7 @@ public class MainPageObject {
         while (driver.findElements(by).size() == 0)
         {
             if (alreadySwiped > maxSwipes){
-                waitElementPresent(by, "Cannot find element by swiping up.\n" + error_message, 0);
+                waitForElementPresent(by, "Cannot find element by swiping up.\n" + error_message, 0);
                 return;
             }
 
@@ -124,7 +129,7 @@ public class MainPageObject {
 
     public void swapElementToLeft(By by, String error_message)
     {
-        WebElement element = waitElementPresent(by, error_message, 10);
+        WebElement element = waitForElementPresent(by, error_message, 10);
 
         int left_x = element.getLocation().getX();
         int right_x = left_x + element.getSize().getWidth();
@@ -156,7 +161,7 @@ public class MainPageObject {
     public boolean isElementPresentAndDisplayed(By by)
     {
         try {
-            WebElement element = waitElementPresent(by, "");
+            WebElement element = waitForElementPresent(by, "");
             return element.isDisplayed();
         } catch (TimeoutException e)
         {
@@ -185,7 +190,7 @@ public class MainPageObject {
 
     public String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds)
     {
-        WebElement element = waitElementPresent(by, error_message, timeoutInSeconds);
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         return element.getAttribute(attribute);
     }
 }
