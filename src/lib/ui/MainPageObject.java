@@ -127,9 +127,9 @@ public class MainPageObject {
         }
     }
 
-    public void swapElementToLeft(By by, String error_message)
+    public void swipeElementToLeft(By by, String error_message)
     {
-        WebElement element = waitForElementPresent(by, error_message, 10);
+        WebElement element = waitForElementPresent(by, error_message, UI_INTERACTION_TIMEOUT);
 
         int left_x = element.getLocation().getX();
         int right_x = left_x + element.getSize().getWidth();
@@ -141,7 +141,7 @@ public class MainPageObject {
         TouchAction action = new TouchAction(driver);
         action
                 .press(right_x, middle_y)
-                .waitAction(300)
+                .waitAction(250)
                 .moveTo(left_x, middle_y)
                 .release()
                 .perform();

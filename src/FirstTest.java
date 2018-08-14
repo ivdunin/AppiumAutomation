@@ -1,7 +1,5 @@
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
-import lib.ui.MainPageObject;
-import lib.ui.SearchPageObject;
+import lib.ui.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.*;
@@ -198,97 +196,27 @@ public class FirstTest extends CoreTestCase {
     {
         String folderName = "Learning programming";
         String searchText = "Java";
-        String articleTitle = "Object-oriented programming language";
+        String articleDescription = "Object-oriented programming language";
 
-        mainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/search_container"),
-                "Cannot find search input on main page",
-                UI_INTERACTION_TIMEOUT
-        );
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
 
-        mainPageObject.waitForElementAndSendKeys(
-                By.id("org.wikipedia:id/search_src_text"),
-                searchText,
-                "Cannot find search input!",
-                UI_INTERACTION_TIMEOUT
-        );
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchString(searchText);
+        searchPageObject.clickByArticleWithSubstring(articleDescription);
 
-        mainPageObject.waitForElementAndClick(
-                By.xpath(String.format("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='%s']", articleTitle)),
-                "Cannot find article: '" + articleTitle + "'!",
-                SERVER_INTERACTION_TIMEOUT);
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.waitForTitleElement();
+        String articleTitle = articlePageObject.getArticleTitle();
 
-        mainPageObject.waitForElementPresent(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "Cannot find article header!",
-                SERVER_INTERACTION_TIMEOUT
-        );
+        articlePageObject.addArticleToMyList(folderName);
+        articlePageObject.closeArticle();
 
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
-                "Cannot find More options button!",
-                UI_INTERACTION_TIMEOUT
-        );
+        NavigationUI navigationUI = new NavigationUI(driver);
+        navigationUI.clickMyLists();
 
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//android.widget.TextView[@text='Add to reading list']"),
-                "Cannot add article to reading list, item not found",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/onboarding_button"),
-                "Cannot click on 'Got It' button!",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndClear(
-                By.id("org.wikipedia:id/text_input"),
-                "Cannot find 'Name of list' input element!",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndSendKeys(
-                By.id("org.wikipedia:id/text_input"),
-                folderName,
-                "Cannot find 'Name of list' input, cannot input text",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@text='OK']"),
-                "Cannot click 'Ok' button!",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
-                "Cannot close article (button X not found!)",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
-                "Cannot open my lists page",
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.waitForElementAndClick(
-                By.xpath(String.format("//android.widget.TextView[@text='%s']", folderName)),
-                "Cannot find folder: " + folderName,
-                UI_INTERACTION_TIMEOUT
-        );
-
-        mainPageObject.swapElementToLeft(
-                By.xpath("//*[@text='Java (programming language)']"),
-                "Cannot find saved article"
-        );
-
-        mainPageObject.waitForElementNotPresent(
-                By.xpath("//*[@text='Java (programming language)']"),
-                "Cannot delete article",
-                UI_INTERACTION_TIMEOUT
-        );
+        MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
+        myListsPageObject.openFolderByName(folderName);
+        myListsPageObject.swipeArticleToDelete(articleTitle);
     }
 
     @Test
@@ -469,7 +397,7 @@ public class FirstTest extends CoreTestCase {
      */
     private void deleteArticleFromFolder(String articleText)
     {
-        mainPageObject.swapElementToLeft(
+        mainPageObject.swipeElementToLeft(
                 By.xpath(String.format("//*[@text='%s']", articleText)),
                 "Cannot find saved article"
         );
