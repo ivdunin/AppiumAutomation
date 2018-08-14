@@ -8,6 +8,7 @@ public class SearchPageObject extends MainPageObject {
     private static final String
         SEARCH_INIT_ELEMENT = "//*[contains(@text, 'Search Wikipedia')]",
         SEARCH_INPUT = "//*[contains(@text, 'Search…')]",
+        SEARCH_INPUT_ID = "org.wikipedia:id/search_src_text",
         SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
         SEARCH_RESULT_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']";
 
@@ -41,6 +42,14 @@ public class SearchPageObject extends MainPageObject {
                 UI_INTERACTION_TIMEOUT);
     }
 
+    public void waitForSearchStringWithText(String hint)
+    {
+        this.waitForElementWithText(By.id(SEARCH_INPUT_ID),
+                hint,
+                "Cannot find search element with hint " + hint,
+                UI_INTERACTION_TIMEOUT);
+    }
+
     public void waitForSearchResult(String substring)
     {
         String searchResultXpath = getResultSearchElement(substring);
@@ -56,7 +65,6 @@ public class SearchPageObject extends MainPageObject {
                 "Cannot find and click search result with substring: " + substring,
                 SERVER_INTERACTION_TIMEOUT);
     }
-
 
     public void waitForCancelButtonToAppear()
     {
