@@ -35,4 +35,17 @@ public class SearchTests extends CoreTestCase {
 
         // Input search text here
     }
+
+    @Test
+    public void testCancelSearchEx()
+    {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchString("Java");
+
+        assertTrue("Only one search result found!",searchPageObject.getNumberOfFoundElements() > 1);
+        searchPageObject.clickCancelSearch();
+        searchPageObject.waitForSearchResultDisappear();
+    }
 }
