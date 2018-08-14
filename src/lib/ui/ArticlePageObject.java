@@ -116,6 +116,13 @@ public class ArticlePageObject extends MainPageObject {
                 "Cannot close article (button X not found!)",
                 UI_INTERACTION_TIMEOUT
         );
+    }
 
+    public void assertIfNoArticleTitle()
+    {
+        this.assertElementPresent(
+                By.id(TITLE),
+                "Article title not found!"
+        );
     }
 }

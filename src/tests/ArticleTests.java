@@ -40,4 +40,20 @@ public class ArticleTests extends CoreTestCase {
         articlePageObject.swipeUpToFooter();
     }
 
+    @Test
+    public void testAssertTitle()
+    {
+        String searchText = "Java";
+        String articleText = "Java (programming language)";
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchString(searchText);
+        searchPageObject.clickByArticleWithSubstring(articleText);
+
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        articlePageObject.assertIfNoArticleTitle();
+    }
+
 }
