@@ -14,12 +14,20 @@ public class ArticlePageObject extends MainPageObject {
         ADD_TO_MY_LIST_OVERLAY = "org.wikipedia:id/onboarding_button",
         MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
         MY_LIST_OK_BUTTON = "//*[@text='OK']",
-        CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
+        CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']",
+        FOLDER_ITEM_TITLE_TPL = "//*[@resource-id='org.wikipedia:id/item_title'][@text='{FOLDER_NAME}']";
 
     public ArticlePageObject(AppiumDriver driver)
     {
         super(driver);
     }
+
+    /* TEMPLATES METHODS */
+    private static String getFolderXpathByName(String folderName)
+    {
+        return FOLDER_ITEM_TITLE_TPL.replace("{FOLDER_NAME}", folderName);
+    }
+    /* TEMPLATES METHODS */
 
     public WebElement waitForTitleElement()
     {
@@ -53,30 +61,44 @@ public class ArticlePageObject extends MainPageObject {
                 UI_INTERACTION_TIMEOUT
         );
 
-        this.waitForElementAndClick(
-                By.id(ADD_TO_MY_LIST_OVERLAY),
-                "Cannot click on 'Got It' button!",
-                UI_INTERACTION_TIMEOUT
-        );
+        if (this.isElementPresentAndDisplayed(By.id(ADD_TO_MY_LIST_OVERLAY)))
+        {
+            this.waitForElementAndClick(
+                    By.id(ADD_TO_MY_LIST_OVERLAY),
+                    "Cannot click on 'Got It' button!",
+                    UI_INTERACTION_TIMEOUT
+            );
 
-        this.waitForElementAndClear(
-                By.id(MY_LIST_NAME_INPUT),
-                "Cannot find 'Name of list' input element!",
-                UI_INTERACTION_TIMEOUT
-        );
+            this.waitForElementAndClear(
+                    By.id(MY_LIST_NAME_INPUT),
+                    "Cannot find 'Name of list' input element!",
+                    UI_INTERACTION_TIMEOUT
+            );
 
-        this.waitForElementAndSendKeys(
-                By.id(MY_LIST_NAME_INPUT),
-                folderName,
-                "Cannot find 'Name of list' input, cannot input text",
-                UI_INTERACTION_TIMEOUT
-        );
+            this.waitForElementAndSendKeys(
+                    By.id(MY_LIST_NAME_INPUT),
+                    folderName,
+                    "Cannot find 'Name of list' input, cannot input text",
+                    UI_INTERACTION_TIMEOUT
+            );
 
-        this.waitForElementAndClick(
-                By.xpath(MY_LIST_OK_BUTTON),
-                "Cannot click 'Ok' button!",
-                UI_INTERACTION_TIMEOUT
-        );
+            this.waitForElementAndClick(
+                    By.xpath(MY_LIST_OK_BUTTON),
+                    "Cannot click 'Ok' button!",
+                    UI_INTERACTION_TIMEOUT
+            );
+        } else {
+            String folderItemXpath = getFolderXpathByName(folderName);
+            this.waitForElementPresent(
+                    By.xpath(folderItemXpath),
+                    String.format("Cannot find folder '%s' in created reading list", folderName));
+
+            this.waitForElementAndClick(
+                    By.xpath(folderItemXpath),
+                    String.format("Cannot find and click folder '%s' in reading list", folderName),
+                    UI_INTERACTION_TIMEOUT
+            );
+        }
     }
 
     public void waitForCloseArticleButtonPresent()
