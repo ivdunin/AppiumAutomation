@@ -77,4 +77,15 @@ public class MyListsPageObject extends MainPageObject{
                 "Saved article still in list!",
                 SERVER_INTERACTION_TIMEOUT);
     }
+
+    public void openArticleFromReadingList(String articleTitle)
+    {
+        this.waitForArticleToAppearByTitle(articleTitle);
+
+        String articleXpath = getArticleXpathByTitle(articleTitle);
+        this.waitForElementAndClick(
+                By.xpath(articleXpath),
+                "Cannot open article: " + articleTitle,
+                UI_INTERACTION_TIMEOUT);
+    }
 }
